@@ -1,52 +1,45 @@
 package com.example.user.fileprogressing;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.widget.ListView;
+
+import java.util.HashMap;
+
+/**
+ * 사용자에게 Socket, Bluetooth, NFC에 관한 이미지 전송 프로그램을 제공
+ */
 
 public class MainActivity extends AppCompatActivity {
 
+    ImageList_Adapter imageList_adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        /**
+         * 이미지 파일 리스트를 생성하여 사용자에게 제공
+         */
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-    }
+        // 1) 리스트 뷰 어덥테 생성
+        imageList_adapter = new ImageList_Adapter();
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+        // 2) 리스트 레이아웃 불러오기
+        ListView listView = (ListView)findViewById(R.id.main_listview);
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        //3) 리스트뷰에 레이아웃 연결
+        listView.setAdapter(imageList_adapter);
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        // 4) 이미지 파일 이름을 기준으로 리스트 값 추가
+        FileManager fileManager = new FileManager();
+        HashMap<String, String[]> fileMap = fileManager.getFileMap();
+        for(String uuid : fileMap.keySet()){
+            imageList_adapter.add(uuid, fileMap.get(uuid));
         }
 
-        return super.onOptionsItemSelected(item);
+        // TODO 5) 다이얼로그에 리스트 대입 및 리스너 등록
+
+
+        // 6) 다이얼 로그 실행
     }
 }
